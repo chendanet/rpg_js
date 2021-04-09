@@ -1,31 +1,51 @@
 class Fighter extends Character {
-    constructor(pseudo) {
-        super('Grace', "le/la Fighter", 12, 40, 4, "En vie"); // to use the constructor of heritate class, we use super
+  constructor() {
+    super({
+      name: 'Grace',
+      type: 'Fighter',
+      hp: 12,
+      mana: 40,
+      dmg: 4
+    });
+    this.armor = 0;
+  }
+
+  /**
+   * Inflige les dégâts spéciaux à l'adversaire
+   * @param opponent
+   */
+  dealSpecialDamage(opponent) {
+    // vérifie s'il a assez de mana
+    if (this.mana < 20) {
+      console.error(`Pas assez de mana!`);
+      return false;
     }
 
-    attack(character) {
-        character.sante -= this.dmg; //  a.sante -= b.dmg;
-        console.log(this.pseudo + ' attaque ' + character.pseudo + ' en donnant des coups (' + this.dmg + ' degats)');
+    this.mana -= 20;
+    // 2 points d'armure en plus pour ce tour
+    this.armor = 2;
 
-        character.verifierSante(); // de l'adversaire 
-    }
-      
-    darkVision(character) {
-        this.type -= -20;
-        character.hp -= this.dmg + 5; // en parametre perso est Tork ici ; Tork.sante -= Gandalf.attaque;
-        // la propriété attaque de Gandalf va automatiquement être déduite des PDV  
-        console.log(this.pseudo + ' attaque avec son coup spécial ' + character.pseudo + ' en donnant des coups  (' + this.dmg +5 + ' degats).');
+    const specialDmg = 5;
+    opponent.takeDamage(specialDmg);
+    console.group(`${ this.name } attaque ${ opponent.name } avec sa compétence Dark Vision!`);
+    console.log(`Il lui inflige ${ specialDmg } de dégâts spéciaux.`);
+    console.log(`Et il reçoit 2 points de dégâts en moins jusqu'au prochain tour.`);
+    console.groupEnd();
 
-        this.evoluer(); //personnage courant et pas l'adversaire !
-        character.verifierSante(); //de l'adversaire 
+    return true;
+  }
+
+  /**
+   * Reçoit une attaque
+   * @param dmg le nombre de dégats reçu
+   */
+  takeDamage(dmg) {
+    // Si le nombre de dégats reçu est supérieur à la vie, le joueur a perdu
+    this.hp = (this.hp + this.armor) - dmg;
+    this.hp = Math.max(0, this.hp); // le nombre de points de vie ne peut être négatif
+
+    if (this.armor > 0) {
+      console.log(`${ this.name } perd 2 dégâts en moins grâce à sa compétence Dark Vision.`);
     }
-     infligeant 5 dégâts. Jusqu'au prochain tour, il prendra 2 dégâts de moins par coup reçu. Elle coute 20 mana.
+  }
 }
-
-
-// darkVision = () => {
-
-//     this.hp     = this.hp -2;
-//     this.mana   = this.mana -20;
-//     this.dmg    = this.dmg +5;
-// }

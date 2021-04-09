@@ -1,32 +1,67 @@
 class Assassin extends Character {
-    constructor(pseudo) {
-        super('Carl', "l\'Assassin'", 16, 160, 3); // to use the constructor of heritate class, we use super
+  constructor() {
+    super({
+      name: 'Carl',
+      type: 'Assassin',
+      hp: 6,
+      mana: 20,
+      dmg: 6
+    });
+    this.specialTurn = 0;
+  }
+
+  /**
+   * Inflige les dégâts spéciaux à l'adversaire
+   * @param opponent
+   */
+  dealSpecialDamage(opponent) {
+    // vérifie s'il a assez de mana
+    if (this.mana < 20) {
+      console.error(`Pas assez de mana!`);
+      return false;
     }
 
-    attaquer(personnage) {
-        personnage.sante -= this.attaque; // en parametre perso est Tork ici ; Tork.sante -= Gandalf.attaque;
-        // la propriété attaque de Gandalf va automatiquement être déduite des PDV  
-        console.log(this.pseudo + ' attaque ' + personnage.pseudo + ' en lançant un sort (' + this.attaque + ' degats)');
+    this.mana -= 20;
+    this.specialTurn = Turn.currentTurn.numTurn + 1;
 
-        this.evoluer(); //personnage courant et pas l'adversaire !
-        personnage.verifierSante(); //de l'adversaire 
-    }
-      
-    coupSpecial(personnage) { //PREVOIR SELON LES TYPES DE PERSO !
-        personnage.sante -= this.attaque * 2; // en parametre perso est Tork ici ; Tork.sante -= Gandalf.attaque;
-        // la propriété attaque de Gandalf va automatiquement être déduite des PDV  
-        console.log(this.pseudo + ' attaque avec son coup spécial ' + personnage.pseudo + ' en lançant un sort (' + this.attaque * 2 + ' degats)');
+    const specialDmg = 7;
+    opponent.takeDamage(specialDmg);
+    console.group(`${ this.name } attaque ${ opponent.name } avec sa compétence Shadow Hit!`);
+    console.log(`Il lui inflige ${ specialDmg } de dégâts spéciaux.`);
+    console.log(`Il ne prendra pas de dégâts lors du prochain tour.`);
 
-        this.evoluer(); //personnage courant et pas l'adversaire !
-        personnage.verifierSante(); //de l'adversaire 
+    // si l'adversaire n'est pas mort suite au coup spécial, il perd aussi des dégâts
+    if (opponent.hasLost() === false) {
+      console.log(`Par contre il prend 7 de dégâts car ${ opponent.name } est toujours vivant.`);
+      this.takeDamage(7);
+
+      if (this.hasLost()) {
+        console.log(`Et ce con est mort par sa stupidité!`);
+      }
     }
-    
+
+    console.groupEnd();
+
+    return true;
+  }
+
+  /**
+   * Reçoit une attaque
+   * @param dmg le nombre de dégats reçu
+   */
+  takeDamage(dmg) {
+    // si le tour en cours est le special Shadow Hit, l'assassin ne prend pas de dégâts
+    if (this.specialTurn === Turn.currentTurn.numTurn) {
+      console.log(`${ this.name } ne prend pas de dégâts pour ce tour.`);
+      return;
+    }
+
+    // Si le nombre de dégats reçu est supérieur à la vie, le joueur a perdu
+    this.hp = this.hp - dmg;
+    this.hp = Math.max(0, this.hp); // le nombre de points de vie ne peut être négatif
+
+    if (this.hp <= 0) {
+      this.status = 'loser';
+    }
+  }
 }
-
-
-// darkVision = () => {
-
-//     this.hp     = this.hp -2;
-//     this.mana   = this.mana -20;
-//     this.dmg    = this.dmg +5;
-// }

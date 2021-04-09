@@ -1,25 +1,84 @@
-class Game  {
+class Game {
+  constructor(turnCount = 10) {
+    this.turnCount = turnCount; // nombre de tours restants
+    this.numTurn = 0;
+    this.characters = []; // les personnages du jeu
+  }
 
-    let Turnleft 
-    console.log('Le tour commence')
-    
-    for(let Turn = 1; Turn < 10; Turn++) {
-    console.log(Turn);
+  get turnLeft() {
+    return this.turnCount - this.numTurn;
+  }
+
+  get playingCharacters() {
+    return this.characters.filter(c => c.isPlaying());
+  }
+
+  get winners() {
+    return this.characters.filter(c => c.hasWon());
+  }
+
+  /**
+   * Ajoute un personnage
+   * @param character
+   */
+  addCharacter(character) {
+    this.characters.push(character);
+  }
+
+  /**
+   * Débute le jeu
+   */
+  start() {
+    if (this.numTurn > 0) {
+      console.error('Le jeu a déjà débuté!!');
+      Turn.currentTurn.showCurrentTurn();
+      return;
     }
+    this.newTurn();
+  }
+
+  newTurn() {
+    // on finit le jeu s'il ne reste plus qu'un joueur ou s'il n'y a plus de tours restants
+    if (this.playingCharacters.length === 1 || this.turnLeft === 0) {
+      this.endGame();
+      return;
+    }
+
+    this.numTurn++;
+    new Turn(this); // envoie l'objet Game en cours à Turn en paramètre
+  }
+
+  endTurn() {
+    // réinitialise les points de vie spéciaux des personnages s'ils en possèdent
+    this.playingCharacters.forEach(c => {
+      c.armor = 0;
+    });
+
+    // s'il n'y a plus de tours restants, on finit le jeu
+    if (this.turnLeft === 0) {
+      this.endGame();
+    } else {
+      this.newTurn();
+    }
+  }
+
+  endGame() {
+    this.playingCharacters.forEach(c => {
+      c.status = 'winner';
+    });
+
+    console.group(`Le jeu est fini!`);
+    console.log(`Les joueurs gagnants sont: ${ this.winners.map(c => c.name).join(', ') }`);
+    console.groupEnd();
+  }
+
+  /**
+   * Affiche les informations des joueurs encore vivants
+   */
+  watchStats() {
+    console.log(`Les joueurs restants sont:`);
+    this.playingCharacters.forEach(c => {
+      c.showStats();
+    });
+  }
 }
-
-
-
-
-
-// // Plan of fight : 
-// var fighter   = new Fighter('Grace');
-// var paladin    = new Paladin('Ulder');
-// console.log(assassin.informations);
-// console.log(paladin.informations);
-// paladin.attaquer(assassin);
-// console.log(assassin.informations);
-// assassin.attaquer(paladin);
-// console.log(paladin.informations);
-// paladin.coupSpecial(assassin);
-

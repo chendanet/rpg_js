@@ -1,34 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tales of Desesperia</title>
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>RPG</title>
+</head>
+<body>
 
-        <p>Le jeu consiste à se battre <strong>pendant 10 tours</strong> tant que les personnages soient en vie ⚔ !</p>
-        <p>Il y a en tout 5 personnages. Chacun des joueurs joue à tour de rôle à chaque tour.</p>
-        <p>Voici les personnages du jeu :</p>
-            <ul>
-                <li>Grace :     La classe Fighter (combattant équilibré sous tous les bords)</li>
-                <li>Ulder :     La classe Paladin (chevalier puissant et défensif)</li>
-                <li>Moana :     La classe Monk (prêtre qui peut se guérir)</li>
-                <li>Draven :    La classe Berzerker (bourrin avec une attaque élevée)</li>
-                <li>Carl :      La classe Assassin (rusé et fourbe)</li>
-            </ul>
+    <script src="Game.js"></script>
+    <script src="Turn.js"></script>
+    <script src="Character.js"></script>
+    <script src="Assassin.js"></script>
+    <script src="Fighter.js"></script>
+    <script src="Paladin.js"></script>
+    <script src="Berzerker.js"></script>
+    <script src="Monk.js"></script>
 
-        <p>Bon jeu ! 😄</p>
-        <script src='character.js'></script>
-        <script src="turn.js"></script>
-        <script src="game.js"></script>
-        <!-- <script src="document.js"></script> -->
-        <script src="fighter.js"></script>
-        <!-- <script src="paladin.js"></script>
-        <script src="monk.js"></script>
-        <script src="berzerker.js"></script>
-        <script src="assassin.js"></script> -->
-    </body>
+    <script>
+        const game = new Game()
+        const grace = new Fighter()
+        const carl = new Assassin()
+        const ulder = new Paladin()
+        const draven = new Berzerker()
+        const moana = new Monk()
+
+        game.addCharacter(grace)
+        game.addCharacter(carl)
+        game.addCharacter(ulder)
+        game.addCharacter(draven)
+        game.addCharacter(moana)
+        game.start()
+    </script>
+</body>
 </html>
-
